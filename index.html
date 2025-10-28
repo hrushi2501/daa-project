@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Indexing Engine - DAA Project</title>
+    
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.3s ease-in',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/custom.css">
+</head>
+<body class="bg-gray-950 text-gray-100 font-mono">
+    
+    <!-- App Container -->
+    <div id="app" class="min-h-screen flex flex-col">
+        
+        <!-- Header -->
+        <header class="bg-gray-900 border-b border-gray-800 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-blue-400">Hybrid Indexing Engine</h1>
+                    <p class="text-sm text-gray-400">LSM Tree • Skip List • Bloom Filter • O(log n) Operations</p>
+                </div>
+                <div class="flex gap-3">
+                    <button id="clear-btn" class="px-4 py-2 bg-red-500/10 text-red-400 rounded border border-red-500/20 hover:bg-red-500/20 transition">
+                        Clear Data
+                    </button>
+                    <button id="demo-btn" class="px-4 py-2 bg-blue-500/10 text-blue-400 rounded border border-blue-500/20 hover:bg-blue-500/20 transition">
+                        Run Demo
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex overflow-hidden">
+            
+            <!-- Left Sidebar - Command Terminal -->
+            <section class="w-1/3 bg-gray-900 border-r border-gray-800 flex flex-col">
+                <div class="px-4 py-3 bg-gray-800 border-b border-gray-700 flex items-center justify-between">
+                    <h2 class="text-sm font-semibold text-gray-300">Command Terminal</h2>
+                    <span class="text-xs text-gray-500">ES6 Module Engine</span>
+                </div>
+                
+                <!-- Terminal Output -->
+                <div id="terminal-output" class="flex-1 overflow-auto p-4 space-y-2 text-sm">
+                    <div class="text-gray-500 text-xs">
+                        <p>// Hybrid Indexing Engine v1.0</p>
+                        <p>// Commands: PUT, GET, DELETE, COMPACT, STATS, HELP</p>
+                        <p class="mt-2">Ready to accept commands...</p>
+                    </div>
+                </div>
+                
+                <!-- Command Input -->
+                <div class="p-4 bg-gray-800 border-t border-gray-700">
+                    <div class="flex gap-2">
+                        <span class="text-blue-400 self-center">$</span>
+                        <input 
+                            type="text" 
+                            id="command-input"
+                            placeholder="PUT key value | GET key | DELETE key"
+                            class="flex-1 bg-gray-900 text-gray-100 px-3 py-2 rounded border border-gray-700 focus:border-blue-500 focus:outline-none text-sm"
+                            autocomplete="off"
+                        />
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        Press Enter to execute • Tab for autocomplete
+                    </div>
+                </div>
+            </section>
+
+            <!-- Center - Main Visualization Area -->
+            <section class="flex-1 flex flex-col overflow-hidden">
+                
+                <!-- Metrics Dashboard -->
+                <div class="grid grid-cols-4 gap-4 p-4 bg-gray-900 border-b border-gray-800">
+                    
+                    <!-- Metric 1: Write Operations -->
+                    <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs text-gray-400 uppercase tracking-wide">Write Ops</span>
+                            <span class="text-xs text-green-400" id="write-trend">—</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-100" id="write-count">0</div>
+                        <div class="mt-2 text-xs text-gray-500">O(log n) avg</div>
+                    </div>
+
+                    <!-- Metric 2: Read Operations -->
+                    <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs text-gray-400 uppercase tracking-wide">Read Ops</span>
+                            <span class="text-xs text-blue-400" id="read-trend">—</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-100" id="read-count">0</div>
+                        <div class="mt-2 text-xs text-gray-500">O(k·log n)</div>
+                    </div>
+
+                    <!-- Metric 3: Write Amplification -->
+                    <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs text-gray-400 uppercase tracking-wide">Write Amp</span>
+                            <span class="text-xs text-warning" id="wa-status">Normal</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-100" id="write-amp">1.0x</div>
+                        <div class="mt-2 text-xs text-gray-500">Target: &lt;10x</div>
+                    </div>
+
+                    <!-- Metric 4: Bloom Filter FP Rate -->
+                    <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs text-gray-400 uppercase tracking-wide">Bloom FP</span>
+                            <span class="text-xs text-success" id="bloom-status">Optimal</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-100" id="bloom-fp">0.0%</div>
+                        <div class="mt-2 text-xs text-gray-500">Target: &lt;1%</div>
+                    </div>
+                    
+                </div>
+
+                <!-- Storage Inspector -->
+                <div class="flex-1 p-4 overflow-auto">
+                    <div class="space-y-4">
+                        
+                        <!-- Memtable (Skip List) -->
+                        <div class="bg-gray-900 rounded-lg border border-gray-800 p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-gray-300">Memtable (Skip List)</h3>
+                                <div class="flex gap-3 text-xs text-gray-500">
+                                    <span>Keys: <span id="memtable-keys" class="text-gray-300">0</span></span>
+                                    <span>Size: <span id="memtable-size" class="text-gray-300">0 KB</span></span>
+                                    <span id="memtable-status" class="px-2 py-0.5 bg-green-500/10 text-green-400 rounded border border-green-500/20">
+                                        Active
+                                    </span>
+                                </div>
+                            </div>
+                            <canvas id="memtable-canvas" class="w-full h-48 bg-gray-950 rounded border border-gray-800"></canvas>
+                        </div>
+
+                        <!-- SSTables (Disk) -->
+                        <div class="bg-gray-900 rounded-lg border border-gray-800 p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-gray-300">SSTables (Disk Storage)</h3>
+                                <span class="text-xs text-gray-500">Leveled Compaction Strategy</span>
+                            </div>
+                            <div id="sstables-container" class="space-y-2">
+                                <!-- SSTable levels will be dynamically added -->
+                                <div class="text-xs text-gray-500 text-center py-8">
+                                    No SSTables yet. Write operations will create them.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bloom Filter -->
+                        <div class="bg-gray-900 rounded-lg border border-gray-800 p-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-sm font-semibold text-gray-300">Bloom Filter Bit Array</h3>
+                                <div class="flex gap-3 text-xs text-gray-500">
+                                    <span>Bits: <span id="bloom-bits" class="text-gray-300">1024</span></span>
+                                    <span>Hash Funcs: <span id="bloom-hashes" class="text-gray-300">3</span></span>
+                                    <span>Fill: <span id="bloom-fill" class="text-gray-300">0%</span></span>
+                                </div>
+                            </div>
+                            <canvas id="bloom-canvas" class="w-full h-24 bg-gray-950 rounded border border-gray-800"></canvas>
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Sidebar - Query Tracer & Analytics -->
+            <section class="w-1/4 bg-gray-900 border-l border-gray-800 flex flex-col overflow-hidden">
+                <div class="px-4 py-3 bg-gray-800 border-b border-gray-700">
+                    <h2 class="text-sm font-semibold text-gray-300">Query Tracer</h2>
+                </div>
+                
+                <div id="query-tracer" class="flex-1 overflow-auto p-4">
+                    <div class="text-xs text-gray-500 text-center py-8">
+                        Execute a query to see trace steps
+                    </div>
+                </div>
+
+                <!-- Complexity Analysis -->
+                <div class="p-4 bg-gray-800 border-t border-gray-700">
+                    <h3 class="text-xs font-semibold text-gray-400 mb-3 uppercase tracking-wide">Complexity Analysis</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Write:</span>
+                            <span class="text-green-400 font-mono">O(log n)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Read:</span>
+                            <span class="text-blue-400 font-mono">O(k·log n)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Compaction:</span>
+                            <span class="text-yellow-400 font-mono">O(n log k)</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
