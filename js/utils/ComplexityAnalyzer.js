@@ -3,7 +3,7 @@
  * Provides runtime analysis and performance metrics calculation for data structures
  */
 
-class ComplexityAnalyzer {
+export class ComplexityAnalyzer {
     constructor() {
         this.metrics = new Map();
         this.operationCounts = new Map();
@@ -315,11 +315,11 @@ class ComplexityAnalyzer {
             report += '\n';
         });
 
-        return report;
+        return summary;
     }
 }
 
-// Export for use in other modules
+// Export for Node.js compatibility (optional)
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = ComplexityAnalyzer;
+    module.exports = { ComplexityAnalyzer };
 }

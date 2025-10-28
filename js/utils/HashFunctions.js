@@ -3,7 +3,7 @@
  * Collection of hash function implementations for Bloom Filters and other data structures
  */
 
-class HashFunctions {
+export class HashFunctions {
     constructor() {
         this.seed = 0x9747b28c;
     }
@@ -345,7 +345,7 @@ class HashFunctions {
     }
 }
 
-// Export for use in other modules
+// Export for Node.js compatibility (optional)
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = HashFunctions;
+    module.exports = { HashFunctions };
 }

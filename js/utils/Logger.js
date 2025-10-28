@@ -3,7 +3,7 @@
  * Comprehensive logging and debugging utility for data structure operations
  */
 
-class Logger {
+export class Logger {
     constructor(options = {}) {
         this.logLevel = options.logLevel || 'INFO';
         this.enableConsole = options.enableConsole !== false;
@@ -526,7 +526,7 @@ class Logger {
     }
 }
 
-// Export for use in other modules
+// Export for Node.js compatibility (optional)
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = Logger;
+    module.exports = { Logger };
 }

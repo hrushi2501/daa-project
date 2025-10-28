@@ -1,0 +1,37 @@
+{
+  "name": "lsm-tree-visualization",
+  "version": "1.0.0",
+  "description": "Interactive visualization tool for LSM Trees, Bloom Filters, Skip Lists, and related data structures",
+  "main": "js/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx http-server -c-1 -p 8080",
+    "dev": "npx http-server -c-1 -p 8080 -o",
+    "lint": "eslint js/**/*.js",
+    "format": "prettier --write \"**/*.{js,html,css,md}\""
+  },
+  "keywords": [
+    "lsm-tree",
+    "data-structures",
+    "algorithms",
+    "bloom-filter",
+    "skip-list",
+    "sstable",
+    "visualization",
+    "education"
+  ],
+  "author": "hrushi2501",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hrushi2501/daa-project.git"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "http-server": "^14.1.1",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
