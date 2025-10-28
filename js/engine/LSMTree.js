@@ -21,7 +21,7 @@ import { SSTableManager } from './SSTable.js';
 import { Compaction } from './Compaction.js';
 
 export class LSMTree {
-    constructor(memtableThreshold = 100) {
+    constructor(memtableThreshold = 10) {
         // In-memory components
         this.memtable = new SkipList(16, 0.5);
         this.memtableThreshold = memtableThreshold; // Max entries before flush
