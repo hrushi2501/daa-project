@@ -2,6 +2,12 @@
 
 This project is an interactive web-based visualization tool for advanced data structures and algorithms, focusing on Log-Structured Merge Trees (LSM Trees), Bloom Filters, Skip Lists, and related concepts.
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/hrushi2501/daa-project)
+
+## 🌐 Live Demo
+
+**[View Live Demo on Vercel](https://your-deployment-url.vercel.app)** _(Update this URL after deployment)_
+
 ## Features
 
 - **LSM Tree Visualization**: Interactive demonstration of LSM Tree operations including compaction and SSTable management

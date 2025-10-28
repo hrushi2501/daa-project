@@ -73,7 +73,7 @@ export class Terminal {
      * Simple autocomplete
      */
     autocomplete() {
-        const commands = ['PUT', 'GET', 'DELETE', 'COMPACT', 'STATS', 'HELP', 'CLEAR'];
+        const commands = ['PUT', 'GET', 'DELETE', 'COMPACT', 'STATS', 'HELP', 'CLEAR', 'CLC', 'CLR'];
         const input = this.inputElement.value.toUpperCase();
         
         for (const cmd of commands) {
@@ -131,6 +131,10 @@ export class Terminal {
                     break;
                 case 'CLEAR':
                     this.handleClear();
+                    break;
+                case 'CLC':
+                case 'CLR':
+                    this.handleClearTerminal();
                     break;
                 default:
                     this.printError(`Unknown command: ${cmd}. Type HELP for available commands.`);
@@ -400,6 +404,11 @@ ${result.searchPath.map((step, i) => `
   </div>
   
   <div class="mt-2">
+    <span class="text-gray-400">CLC / CLR</span>
+    <div class="text-gray-500 ml-4">Clear terminal output only (keeps data)</div>
+  </div>
+  
+  <div class="mt-2">
     <span class="text-gray-400">HELP</span>
     <div class="text-gray-500 ml-4">Show this help message</div>
   </div>
@@ -413,7 +422,7 @@ ${result.searchPath.map((step, i) => `
     }
 
     /**
-     * Handle CLEAR command
+     * Handle CLEAR command (clears all data)
      */
     handleClear() {
         this.lsmTree.clear();
@@ -428,13 +437,32 @@ ${result.searchPath.map((step, i) => `
     }
 
     /**
-     * Print to terminal
+     * Handle CLC/CLR command (clears only terminal output, keeps data)
+     */
+    handleClearTerminal() {
+        this.clearOutput();
+        this.print(`
+<div class="text-gray-400 text-xs">Terminal cleared. Data preserved.</div>
+        `.trim(), 'system');
+    }
+
+    /**
+     * Print message to terminal
      */
     print(message, type = 'normal') {
         const div = document.createElement('div');
         div.className = 'terminal-line text-sm';
         div.innerHTML = message;
         this.outputElement.appendChild(div);
+        
+        // Auto-scroll to bottom
+        this.outputElement.scrollTop = this.outputElement.scrollHeight;
+        
+        // Limit number of lines to prevent infinite growth (keep last 500 lines)
+        const maxLines = 500;
+        while (this.outputElement.children.length > maxLines) {
+            this.outputElement.removeChild(this.outputElement.firstChild);
+        }
     }
 
     /**

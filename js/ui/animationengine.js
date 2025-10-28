@@ -86,16 +86,40 @@ export class AnimationEngine {
     renderMemtable() {
         const ctx = this.memtableCtx;
         const canvas = this.memtableCanvas;
-        const width = canvas.width / window.devicePixelRatio;
-        const height = canvas.height / window.devicePixelRatio;
-        
-        // Clear canvas
-        ctx.fillStyle = '#030712'; // gray-950
-        ctx.fillRect(0, 0, width, height);
         
         // Get skip list structure
         const state = this.lsmTree.getState();
         const structure = state.memtable.structure;
+        
+        // Calculate required width based on content
+        const nodeWidth = 60;
+        const levelHeight = 40;
+        const leftMargin = 50;
+        const nodeSpacing = 15;
+        
+        // Find max nodes in any level
+        const maxNodes = structure.reduce((max, level) => Math.max(max, level.nodes.length), 0);
+        const requiredWidth = leftMargin + (maxNodes * (nodeWidth + nodeSpacing)) + 20;
+        
+        // Get container dimensions
+        const containerWidth = canvas.parentElement.clientWidth;
+        const height = 192; // Fixed height (h-48 = 192px)
+        
+        // Use the larger of container width or required width
+        const width = Math.max(containerWidth, requiredWidth);
+        
+        // Update canvas size if needed
+        if (canvas.width !== width * window.devicePixelRatio || canvas.height !== height * window.devicePixelRatio) {
+            canvas.width = width * window.devicePixelRatio;
+            canvas.height = height * window.devicePixelRatio;
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+        
+        // Clear canvas
+        ctx.fillStyle = '#030712'; // gray-950
+        ctx.fillRect(0, 0, width, height);
         
         if (structure.length === 0 || state.memtable.size === 0) {
             // Show empty state
@@ -107,10 +131,7 @@ export class AnimationEngine {
         }
         
         // Calculate layout
-        const nodeWidth = 60;
         const nodeHeight = 30;
-        const levelHeight = 40;
-        const leftMargin = 20;
         const topMargin = 10;
         
         // Draw each level
@@ -125,7 +146,7 @@ export class AnimationEngine {
             
             // Draw nodes
             level.nodes.forEach((node, nodeIndex) => {
-                const x = leftMargin + nodeIndex * (nodeWidth + 15);
+                const x = leftMargin + nodeIndex * (nodeWidth + nodeSpacing);
                 
                 // Check if highlighted
                 const isHighlighted = this.highlightedNodes.has(node.key);
@@ -152,7 +173,7 @@ export class AnimationEngine {
                 
                 // Draw pointer to next node
                 if (nodeIndex < level.nodes.length - 1) {
-                    const nextX = leftMargin + (nodeIndex + 1) * (nodeWidth + 15);
+                    const nextX = leftMargin + (nodeIndex + 1) * (nodeWidth + nodeSpacing);
                     ctx.strokeStyle = '#4b5563'; // gray-600
                     ctx.lineWidth = 1;
                     ctx.beginPath();

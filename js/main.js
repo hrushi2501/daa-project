@@ -108,7 +108,7 @@ function initializeDataStructures() {
 
     try {
         // Initialize LSM Tree
-        AppState.instances.lsmTree = new LSMTree(100); // memtableThreshold = 100
+        AppState.instances.lsmTree = new LSMTree(10); // memtableThreshold = 10
         AppState.logger.info('App', 'LSM Tree initialized');
 
         // Initialize UI components now that LSM Tree is ready
@@ -143,7 +143,7 @@ function initializeDataStructures() {
 
         // Start auto-update for dashboard and storage inspector
         AppState.metricsDashboard.start(1000);
-        AppState.storageInspector.start(1000);
+        AppState.storageInspector.start(5000); // Reduce frequency to 5 seconds to prevent flickering
 
         // Register LSM Tree callbacks for UI updates
         AppState.instances.lsmTree.on('onMemtableInsert', (result) => {
@@ -161,6 +161,7 @@ function initializeDataStructures() {
         AppState.instances.lsmTree.on('onMemtableFlush', (result) => {
             if (AppState.storageInspector) {
                 AppState.storageInspector.showFlushAnimation();
+                AppState.storageInspector.update(); // Immediately update on flush
             }
         });
 
@@ -170,6 +171,8 @@ function initializeDataStructures() {
                     results[0].sourceLevel,
                     results[0].targetLevel
                 );
+                // Delay update slightly to show animation
+                setTimeout(() => AppState.storageInspector.update(), 100);
             }
         });
 

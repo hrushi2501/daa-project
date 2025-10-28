@@ -255,6 +255,62 @@ canvas {
 }
 
 /* ============================================
+   Terminal Output - Fixed Height with Scroll
+   ============================================ */
+
+#terminal-output {
+    max-height: 100%;
+    overflow-y: scroll !important; /* Always show vertical scrollbar */
+    overflow-x: hidden;
+}
+
+/* Always show scrollbar for terminal */
+#terminal-output::-webkit-scrollbar {
+    width: 10px;
+    display: block; /* Force display */
+}
+
+#terminal-output::-webkit-scrollbar-track {
+    background: #111827; /* darker gray-900 */
+    border-radius: 4px;
+    border-left: 1px solid #1f2937;
+}
+
+#terminal-output::-webkit-scrollbar-thumb {
+    background: #374151; /* gray-700 */
+    border-radius: 4px;
+    border: 2px solid #111827;
+}
+
+#terminal-output::-webkit-scrollbar-thumb:hover {
+    background: #4b5563; /* gray-600 */
+}
+
+/* Firefox - always show scrollbar */
+#terminal-output {
+    scrollbar-width: auto; /* Use 'auto' instead of 'thin' to always show */
+    scrollbar-color: #374151 #111827;
+}
+
+/* ============================================
+   Memtable Canvas - Horizontal Scroll Support
+   ============================================ */
+
+#memtable-canvas {
+    min-width: 100%;
+    display: block;
+}
+
+/* Make canvas container horizontally scrollable */
+#memtable-canvas:not(:only-child) {
+    overflow-x: auto;
+}
+
+.bg-gray-900.rounded-lg.border.border-gray-800.p-4:has(#memtable-canvas) {
+    overflow-x: auto;
+}
+
+/* ============================================
    Command Input Focus Effect
    ============================================ */
 

@@ -239,13 +239,7 @@ export class Compaction {
         const inputBytes = sstablesToMerge.reduce((sum, s) => sum + s.size, 0);
         const outputBytes = mergeResult.entries.length * 100; // rough estimate
 
-        // Create new SSTable at target level
-        const newSSTable = this.sstableManager.createSSTable(
-            targetLevel,
-            mergeResult.entries
-        );
-
-        // Remove old SSTables
+        // Remove old SSTables from source level FIRST
         this.sstableManager.clearLevel(sourceLevel);
         
         // Remove overlapping SSTables from target level
@@ -253,9 +247,17 @@ export class Compaction {
             s => !overlappingSSTables.includes(s)
         );
         this.sstableManager.clearLevel(targetLevel);
+        
+        // Re-add non-overlapping target SSTables
         for (const sstable of remainingTarget) {
             this.sstableManager.addSSTable(targetLevel, sstable);
         }
+        
+        // Create new SSTable at target level (AFTER clearing overlapping ones)
+        const newSSTable = this.sstableManager.createSSTable(
+            targetLevel,
+            mergeResult.entries
+        );
 
         const endTime = performance.now();
 
