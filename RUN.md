@@ -1,36 +1,36 @@
 Phase 1:
-```bash
-$ PUT user1 alice@example.com
+```md
+> $ PUT user1 alice@example.com
 ✓ Inserted successfully
 • Key: user1
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT user2 bob@example.com
+> $ PUT user2 bob@example.com
 ✓ Inserted successfully
 • Key: user2
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT user3 charlie@example.com
+> $ PUT user3 charlie@example.com
 ✓ Inserted successfully
 • Key: user3
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ PUT user4 diana@example.com
+> $ PUT user4 diana@example.com
 ✓ Inserted successfully
 • Key: user4
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ PUT user5 eve@example.com
+> $ PUT user5 eve@example.com
 ✓ Inserted successfully
 • Key: user5
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ GET user3
+> $ GET user3
 ✓ Found
 • Key: user3
 • Location: Memtable
@@ -41,7 +41,7 @@ Value:
 charlie@example.com
 Search Path:
 1. Memtable (Skip List) ✓
-$ STATS
+> $ STATS
 System Statistics
 Operations:
 • Writes: 5
@@ -67,39 +67,39 @@ Complexity Analysis:
 • Compaction: O(n log k)
 ```
 Phase 2:
-```bash
-$ PUT user6 frank@example.com
+```md
+> $ PUT user6 frank@example.com
 ✓ Inserted successfully
 • Key: user6
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ PUT user7 grace@example.com
+> $ PUT user7 grace@example.com
 ✓ Inserted successfully
 • Key: user7
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ PUT user8 henry@example.com
+> $ PUT user8 henry@example.com
 ✓ Inserted successfully
 • Key: user8
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT user9 ivy@example.com
+> $ PUT user9 ivy@example.com
 ✓ Inserted successfully
 • Key: user9
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT user10 jack@example.com
+> $ PUT user10 jack@example.com
 ✓ Inserted successfully
 • Key: user10
 • Location: Memtable
 • Time: 2.600ms
 • Complexity: O(log n)
 • Memtable flushed to L0 SSTable
-$ STATS
+> $ STATS
 System Statistics
 Operations:
 • Writes: 10
@@ -126,26 +126,26 @@ Complexity Analysis:
 • Compaction: O(n log k)
 ```
 Phase 5:
-```bash
-$ PUT active1 online
+```md
+> $ PUT active1 online
 ✓ Inserted successfully
 • Key: active1
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ PUT active2 online
+> $ PUT active2 online
 ✓ Inserted successfully
 • Key: active2
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT active3 online
+> $ PUT active3 online
 ✓ Inserted successfully
 • Key: active3
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ GET user5
+> $ GET user5
 ✓ Found
 • Key: user5
 • Location: SSTable
@@ -157,7 +157,7 @@ eve@example.com
 Search Path:
 1. Memtable (Skip List) ✗
 2. SSTable Level 0 (sstable-1) ✓
-$ GET active2
+> $ GET active2
 ✓ Found
 • Key: active2
 • Location: Memtable
@@ -168,7 +168,7 @@ Value:
 online
 Search Path:
 1. Memtable (Skip List) ✓
-$ GET nonexistent
+> $ GET nonexistent
 ⚠ Key not found
 • Key: nonexistent
 • SSTables Checked: 1
@@ -178,8 +178,8 @@ Search Path:
 2. SSTable Level 0 (sstable-1) ✗ (Bloom saved)
 ```
 Phase 4:
-```bash
-$ COMPACT 0
+```md
+> $ COMPACT 0
 ✓ Compaction completed
 • Levels: L0 → L1
 • Input SSTables: 1
@@ -188,7 +188,7 @@ $ COMPACT 0
 • Write Amplification: 1.50x
 • Time: 0.900ms
 • Complexity: O(n log k) where n=10, k=1
-$ STATS
+> $ STATS
 System Statistics
 Operations:
 • Writes: 13
@@ -214,7 +214,7 @@ Complexity Analysis:
 • Write: O(log n)
 • Read: O(log n + k·log n)
 • Compaction: O(n log k)
-$ GET user7
+> $ GET user7
 ✓ Found
 • Key: user7
 • Location: SSTable
@@ -228,14 +228,14 @@ Search Path:
 2. SSTable Level 1 (sstable-2) ✓
 ```
 Phase 5:
-```bash
-$ PUT order1 pending PUT order2 shipped
+```md
+> $ PUT order1 pending PUT order2 shipped
 ✓ Inserted successfully
 • Key: order1
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ get order1
+> $ get order1
 ✓ Found
 • Key: order1
 • Location: Memtable
@@ -246,62 +246,62 @@ Value:
 pending PUT order2 shipped
 Search Path:
 1. Memtable (Skip List) ✓
-$ PUT order2 shipped
+> $ PUT order2 shipped
 ✓ Inserted successfully
 • Key: order2
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ PUT order3 delivered
+> $ PUT order3 delivered
 ✓ Inserted successfully
 • Key: order3
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ PUT order4 cancelled
+> $ PUT order4 cancelled
 ✓ Inserted successfully
 • Key: order4
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT order5 pending
+> $ PUT order5 pending
 ✓ Inserted successfully
 • Key: order5
 • Location: Memtable
 • Time: 0.000ms
 • Complexity: O(log n)
-$ PUT order6 shipped
+> $ PUT order6 shipped
 ✓ Inserted successfully
 • Key: order6
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT order7 delivered
+> $ PUT order7 delivered
 ✓ Inserted successfully
 • Key: order7
 • Location: Memtable
 • Time: 1.900ms
 • Complexity: O(log n)
 • Memtable flushed to L0 SSTable
-$ PUT order8 cancelled
+> $ PUT order8 cancelled
 ✓ Inserted successfully
 • Key: order8
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT order9 pending
+> $ PUT order9 pending
 ✓ Inserted successfully
 • Key: order9
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ PUT order10 shipped
+> $ PUT order10 shipped
 ✓ Inserted successfully
 • Key: order10
 • Location: Memtable
 • Time: 0.100ms
 • Complexity: O(log n)
-$ STATS
+> $ STATS
 System Statistics
 Operations:
 • Writes: 23
@@ -327,7 +327,7 @@ Complexity Analysis:
 • Write: O(log n)
 • Read: O(log n + k·log n)
 • Compaction: O(n log k)
-$ COMPACT 1
+> $ COMPACT 1
 ✓ Compaction completed
 • Levels: L1 → L2
 • Input SSTables: 1
@@ -336,7 +336,7 @@ $ COMPACT 1
 • Write Amplification: 1.50x
 • Time: 0.600ms
 • Complexity: O(n log k) where n=10, k=1
-$ STATS
+> $ STATS
 System Statistics
 Operations:
 • Writes: 23

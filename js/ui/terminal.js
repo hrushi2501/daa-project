@@ -9,6 +9,7 @@
  * - STATS
  * - HELP
  * - CLEAR
+ * - CLR or CLC
  */
 
 export class Terminal {

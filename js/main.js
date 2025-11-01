@@ -143,7 +143,7 @@ function initializeDataStructures() {
 
         // Start auto-update for dashboard and storage inspector
         AppState.metricsDashboard.start(1000);
-        AppState.storageInspector.start(5000); // Reduce frequency to 5 seconds to prevent flickering
+        AppState.storageInspector.start(10000); // Reduce frequency to 10 seconds to prevent flickering
 
         // Register LSM Tree callbacks for UI updates
         AppState.instances.lsmTree.on('onMemtableInsert', (result) => {
